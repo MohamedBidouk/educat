@@ -1,16 +1,20 @@
-import { connectDB } from "../../../../lib/mongodb";
+
+import {hash} from "bcrypt";
+import User, {IUser} from "@/model/user";
+import dbConnect from "@/lib/mongoose";
+import {NextResponse} from "next/server";
 
 
 export async function POST(req: Request) {
     try {
-        await connectDB();
+        await dbConnect();
         const { email, password, role } = await req.json();
 
         if (!email || !password) {
-            return new Response(JSON.stringify({ error: "Email and password required" }), { status: 400 });
+            return NextResponse.json({ error: "Email and password required" }, { status: 400 });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await hash(password, 10);
 
         const newUser = await User.create({
             email,
@@ -18,8 +22,21 @@ export async function POST(req: Request) {
             role: role || "user",
         });
 
-        return new Response(JSON.stringify({ success: true, user: newUser }), { status: 201 });
+        return NextResponse.json({ user: newUser }, { status: 201 });
     } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+        return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+}
+
+export async function GET() {
+    try {
+        await dbConnect();
+
+        const users = await User.find().lean<IUser[]>().exec();
+
+        return NextResponse.json({ users });
+    } catch (err: any) {
+        console.log(err);
+        return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }

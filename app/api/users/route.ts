@@ -1,5 +1,5 @@
 // app/api/users/route.ts
-import clientPromise from "@/lib/mongodb";
+import clientPromise from "@/lib/mongoose";
 
 export async function GET() {
     try {
