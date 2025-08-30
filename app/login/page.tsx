@@ -10,7 +10,7 @@ export default function RegisterPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const res = await fetch("/api/auth/register", {
+        const res = await fetch("/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password, role: "user" }),
@@ -30,7 +30,7 @@ export default function RegisterPage() {
                 onSubmit={handleSubmit}
                 className="bg-white shadow-lg rounded-xl p-6 w-96"
             >
-                <h1 className="text-xl font-bold mb-4 text-black">Register User</h1>
+                <h1 className="text-xl font-bold mb-4 text-black">Log in</h1>
 
                 <input
                     type="email"
@@ -54,7 +54,7 @@ export default function RegisterPage() {
                     type="submit"
                     className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
                 >
-                    Register
+                    Log in
                 </button>
 
                 {message && <p className="mt-3 text-center">{message}</p>}
